@@ -4,6 +4,14 @@
   "description": "A utility library to generate and validate strong passwords with customizable criteria.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "test": "jest",
     "build": "tsc",
