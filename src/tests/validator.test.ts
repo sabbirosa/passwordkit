@@ -1,4 +1,4 @@
-import { checkPasswordStrength } from "../src/validator";
+import { checkPasswordStrength } from "../validator";
 
 describe("Password Validator", () => {
   it("should return full score for a strong password", () => {

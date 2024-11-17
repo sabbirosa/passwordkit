@@ -3,6 +3,11 @@
   "version": "1.0.1",
   "description": "A utility library to generate and validate strong passwords with customizable criteria.",
   "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    "import": "./dist/index.js",
+    "require": "./dist/index.js"
+  },
   "types": "dist/index.d.ts",
   "files": [
     "dist/",
