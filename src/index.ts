@@ -1,2 +1,3 @@
-export { generatePassword } from "./generator";
-export { checkPasswordStrength } from "./validator";
+export * from "./generator";
+export * from "./otp";
+export * from "./validator";

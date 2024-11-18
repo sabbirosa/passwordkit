@@ -4,4 +4,7 @@ module.exports = {
   transform: {
     "^.+.tsx?$": ["ts-jest",{}],
   },
+  fakeTimers: {
+    enableGlobally: true,
+  },
 };
