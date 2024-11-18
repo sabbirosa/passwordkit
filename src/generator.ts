@@ -1,3 +1,10 @@
+function generateRandomCharacterFromSet(set: string): string {
+  const array = new Uint8Array(1);
+  crypto.getRandomValues(array);
+  const index = array[0] % set.length;
+  return set.charAt(index);
+}
+
 export function generatePassword(options: {
   length: number;
   includeUppercase: boolean;
@@ -5,24 +12,30 @@ export function generatePassword(options: {
   includeNumbers: boolean;
   includeSpecialCharacters: boolean;
 }): string {
-  const charsets = {
-    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lowercase: "abcdefghijklmnopqrstuvwxyz",
-    numbers: "0123456789",
-    special: "!@#$%^&*()_+[]{}|;:,.<>?",
-  };
+  const {
+    length,
+    includeUppercase,
+    includeLowercase,
+    includeNumbers,
+    includeSpecialCharacters,
+  } = options;
 
-  let charset = "";
-  if (options.includeUppercase) charset += charsets.uppercase;
-  if (options.includeLowercase) charset += charsets.lowercase;
-  if (options.includeNumbers) charset += charsets.numbers;
-  if (options.includeSpecialCharacters) charset += charsets.special;
+  if (length <= 0) throw new Error("Password length must be greater than 0.");
 
-  if (!charset)
-    throw new Error("At least one character type must be included.");
+  const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lower = "abcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  const special = "!@#$%^&*()_+-=[]{}|;:',.<>?";
+  let pool = "";
 
-  return Array.from(
-    { length: options.length },
-    () => charset[Math.floor(Math.random() * charset.length)]
-  ).join("");
+  if (includeUppercase) pool += upper;
+  if (includeLowercase) pool += lower;
+  if (includeNumbers) pool += numbers;
+  if (includeSpecialCharacters) pool += special;
+
+  if (!pool) throw new Error("At least one character type must be included.");
+
+  return Array.from({ length })
+    .map(() => generateRandomCharacterFromSet(pool))
+    .join("");
 }

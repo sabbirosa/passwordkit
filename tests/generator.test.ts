@@ -1,4 +1,4 @@
-import { generatePassword } from "../generator";
+import { generatePassword } from "../src";
 
 describe("Password Generator", () => {
   it("should generate a password of specified length", () => {
