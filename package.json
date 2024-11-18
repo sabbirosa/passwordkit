@@ -1,7 +1,7 @@
 {
   "name": "passwordkit",
   "version": "1.0.2",
-  "description": "A utility library to generate and validate strong passwords with customizable criteria.",
+  "description": "A versatile library for generating and validating strong passwords and secure one-time passwords (OTPs) with customizable criteria. Perfect for enhancing application security.",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "exports": {

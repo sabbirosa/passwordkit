@@ -1,36 +1,41 @@
 # PasswordKit
 
-A utility library for generating and validating strong passwords. Designed to help developers create secure applications by ensuring users generate and use strong passwords.
+A utility library for generating and validating strong passwords and one-time passwords (OTPs). Designed to help developers implement robust authentication mechanisms in their applications.
 
-## Why is This Project Important?
+## Why is PasswordKit Important?
 
-In today’s digital world, where personal and sensitive information is stored online, weak passwords are one of the most common entry points for hackers. Millions of accounts are compromised every year because users choose passwords that are easy to guess or crack.
+In today’s digital age, weak passwords and insecure authentication practices are major causes of data breaches. PasswordKit addresses this challenge by providing tools for:
 
-Using a **strong password** generator and validator can:
-
-- Prevent brute-force and dictionary attacks.
-- Protect sensitive user data.
-- Build user trust by enforcing strong password policies.
-
-This library aims to make implementing password security seamless for developers by providing robust tools to generate strong passwords and validate password strength against custom criteria.
+- Generating strong passwords based on customizable criteria.
+- Validating password strength.
+- Generating secure, expirable OTPs for two-factor authentication or verification processes.
 
 ## Features
 
-1.  **Generate Strong Passwords**:
+1.  **Password Generation**:
 
-    - Easily create passwords based on custom criteria, such as length, inclusion of uppercase letters, numbers, and special characters.
+    - Create strong, secure passwords with custom criteria (length, uppercase, numbers, special characters).
 
-2.  **Validate Password Strength**:
+2.  **Password Validation**:
 
-    - Ensure user-provided passwords meet your application’s security requirements.
+    - Evaluate user-provided passwords against your security requirements.
 
-3.  **Customizable**:
+3.  **OTP Generation and Validation**:
 
-    - Define your own criteria for what makes a password "strong."
+    - Generate one-time passwords for use in login, account recovery, or verification processes.
+    - Automatically manage OTP expiration with an in-memory caching system.
+
+4.  **Customizable**:
+
+    - Define your own criteria for passwords and OTPs.
+
+5.  **Lightweight and Isomorphic**:
+
+    - Works seamlessly in both **Node.js** and **browser** environments.
 
 ## Installation
 
-Install the library via npm:
+Install PasswordKit via npm:
 
 ```bash
 npm install passwordkit
@@ -38,11 +43,12 @@ npm install passwordkit
 
 ## Usage
 
-### Generating Passwords
+### Password Generation
+
+Generate a secure password by specifying custom criteria:
 
 ```javascript
 import { generatePassword } from "passwordkit";
-
 const password = generatePassword({
   length: 12,
   includeUppercase: true,
@@ -53,24 +59,27 @@ const password = generatePassword({
 
 console.log(password);
 
-/*
-Example Output: "A1@b2C3#d4E5"
-*/
+/* 
+Example Output: "A1b2@C3d#E4f5"
+ */
 ```
 
-#### Parameters for generatePassword
+#### Parameters for `generatePassword`
 
-- **length** (number): Desired password length.
-- **includeUppercase** (boolean): Whether to include uppercase letters.
-- **includeLowercase** (boolean): Whether to include lowercase letters.
-- **includeNumbers** (boolean): Whether to include numbers.
-- **includeSpecialCharacters** (boolean): Whether to include special characters like @, #, !.
+| Parameter                  | Type    | Description                                       |
+| -------------------------- | ------- | ------------------------------------------------- |
+| `length`                   | number  | Desired length of the password.                   |
+| `includeUppercase`         | boolean | Include uppercase letters (A-Z).                  |
+| `includeLowercase`         | boolean | Include lowercase letters (a-z).                  |
+| `includeNumbers`           | boolean | Include numeric digits (0-9).                     |
+| `includeSpecialCharacters` | boolean | Include special characters (e.g., @, #, !, etc.). |
 
-### Validating Passwords
+### Password Validation
+
+Evaluate the strength of a given password against predefined criteria:
 
 ```javascript
 import { checkPasswordStrength } from "passwordkit";
-
 const result = checkPasswordStrength("P@ssword123", {
   minLength: 8,
   requireUppercase: true,
@@ -78,55 +87,118 @@ const result = checkPasswordStrength("P@ssword123", {
   requireNumbers: true,
   requireSpecialCharacters: true,
 });
-
 console.log(result);
 
-/*
-Output:
-
-{
-  score: 5,
-  messages: []
-}
+/* 
+Output: 
+    {   
+      score: 5,
+      messages: []
+    } 
 */
 ```
 
-#### Parameters for checkPasswordStrength
+#### Parameters for `checkPasswordStrength`
 
-- **password** (string): The password to validate.
-- **minLength** (number): Minimum allowed password length.
-- **requireUppercase** (boolean): Require at least one uppercase letter.
-- **requireLowercase** (boolean): Require at least one lowercase letter.
-- **requireNumbers** (boolean): Require at least one numeric digit.
-- **requireSpecialCharacters** (boolean): Require at least one special character like @, #, !.
+| Parameter                  | Type    | Description                                  |
+| -------------------------- | ------- | -------------------------------------------- |
+| `password`                 | string  | The password to validate.                    |
+| `minLength`                | number  | Minimum length required for the password.    |
+| `requireUppercase`         | boolean | Require at least one uppercase letter (A-Z). |
+| `requireLowercase`         | boolean | Require at least one lowercase letter (a-z). |
+| `requireNumbers`           | boolean | Require at least one numeric digit (0-9).    |
+| `requireSpecialCharacters` | boolean | Require at least one special character.      |
 
-#### Result
+#### Validation Result for `checkPasswordStrength`
 
-- **score** (number): A score from 0 to 5 representing how many criteria the password meets.
-- **messages** (array): A list of reasons why the password is weak (if applicable).
+| Key        | Type     | Description                                            |
+| ---------- | -------- | ------------------------------------------------------ |
+| `score`    | number   | A score (0–5) based on how many criteria were met.     |
+| `messages` | string[] | A list of reasons why the password is considered weak. |
+
+### OTP Generation and Validation
+
+#### Generate an OTP
+
+```javascript
+import { createOtp } from "passwordkit";
+const otp = createOtp("user123", 300); // Generate OTP valid for 300 seconds (5 minutes)  console.log(`Your OTP is: ${otp}`);
+
+/*  Example Output: "458201"  */
+```
+
+#### Parameters for createOtp
+
+| Parameter         | Type   | Description                                        |
+| ----------------- | ------ | -------------------------------------------------- |
+| `key`             | string | A unique key to associate the OTP (e.g., user ID). |
+| `expiryInSeconds` | number | Expiry time for the OTP in seconds (default: 300). |
+
+#### Validate an OTP
+
+```javascript
+import { validateOtp } from "passwordkit";
+const isValid = validateOtp("user123", "458201"); // Validate OTP  console.log(isValid ? "OTP is valid" : "OTP is invalid");
+
+/*  Output:  OTP is valid  */
+```
+
+#### Parameters for validateOtp
+
+| Parameter | Type   | Description                             |
+| --------- | ------ | --------------------------------------- |
+| `key`     | string | The unique key associated with the OTP. |
+| `otp`     | string | The OTP to validate.                    |
+
+### OTP Lifecycle
+
+1.  **Generate OTP**:
+
+    - Use createOtp to generate a time-limited OTP.
+    - The OTP is stored in a lightweight in-memory cache.
+
+2.  **Validate OTP**:
+
+    - Use validateOtp to check if the OTP is correct and still valid.
+    - Once validated, the OTP is automatically removed from the cache.
+
+3.  **Automatic Expiration**:
+
+    - OTPs expire after the defined time (default is 300 seconds) and are automatically removed from the cache.
+
+#### Lifecycle of OTP
+
+| Step         | Description                                                     |
+| ------------ | --------------------------------------------------------------- |
+| **Generate** | Use `createOtp` to generate an OTP with a specific expiry time. |
+| **Validate** | Use `validateOtp` to check if the OTP is correct and valid.     |
+| **Expire**   | OTP automatically expires after the defined expiry time.        |
+
+## Why Use Strong Passwords and OTPs?
+
+### Strong Passwords:
+
+- Protect accounts from brute-force attacks.
+- Ensure secure access to sensitive information.
+
+### OTPs:
+
+- Add an extra layer of security through two-factor authentication (2FA).
+- Verify user actions such as login, password recovery, or sensitive changes (e.g., updating email).
+
+PasswordKit simplifies the implementation of these best practices, enabling developers to focus on building secure applications.
 
 ## Example Use Case
 
-Imagine you're building a web application where users must register an account. You want to:
+### Use Case 1: Secure Registration
 
-1.  Generate random secure passwords for users who prefer automatic generation.
-2.  Validate user-provided passwords to meet your application's security standards.
+- **Step 1**: Generate a random password for users who choose "generate password."
+- **Step 2**: Validate user-provided passwords to meet security criteria.
 
-By using passwordkit, you can:
+### Use Case 2: Two-Factor Authentication (2FA)
 
-- Simplify implementation.
-- Reduce the risk of account compromises.
-- Enforce strong security policies with minimal effort.
-
-## Why Use Strong Password?
-
-A **strong password**:
-
-- Is long and complex.
-- Contains a mix of uppercase, lowercase, numbers, and special characters.
-- Is difficult to guess or crack, even with advanced tools.
-
-passwordkit helps enforce these best practices with ease.
+- **Step 1**: Generate an OTP when the user logs in or performs a sensitive action.
+- **Step 2**: Validate the OTP within its expiry window to ensure secure verification.
 
 ## Contributing
 
@@ -134,4 +206,4 @@ We welcome contributions! Please submit issues or pull requests via [GitHub](htt
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
