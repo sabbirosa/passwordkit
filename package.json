@@ -26,6 +26,9 @@
     "password",
     "generator",
     "validator",
+    "otp-generator",
+    "otp-validation",
+    "password-tool",
     "security",
     "typescript",
     "passwordkit"
