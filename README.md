@@ -60,8 +60,8 @@ const password = generatePassword({
 console.log(password);
 
 /* 
-Example Output: "A1b2@C3d#E4f5"
- */
+    Example Output: "A1b2@C3d#E4f5"
+*/
 ```
 
 #### Parameters for `generatePassword`
@@ -124,7 +124,9 @@ Output:
 import { createOtp } from "passwordkit";
 const otp = createOtp("user123", 300); // Generate OTP valid for 300 seconds (5 minutes)  console.log(`Your OTP is: ${otp}`);
 
-/*  Example Output: "458201"  */
+/* 
+    Example Output: "458201" 
+*/
 ```
 
 #### Parameters for createOtp
@@ -140,7 +142,9 @@ const otp = createOtp("user123", 300); // Generate OTP valid for 300 seconds (5 
 import { validateOtp } from "passwordkit";
 const isValid = validateOtp("user123", "458201"); // Validate OTP  console.log(isValid ? "OTP is valid" : "OTP is invalid");
 
-/*  Output:  OTP is valid  */
+/* 
+    Output:  OTP is valid 
+*/
 ```
 
 #### Parameters for validateOtp
